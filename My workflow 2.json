@@ -1,0 +1,172 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1V67BBTZgfx0HfA4bHHfwW1o6v-TFbbwZoqC6VAmGHNA",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1V67BBTZgfx0HfA4bHHfwW1o6v-TFbbwZoqC6VAmGHNA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1V67BBTZgfx0HfA4bHHfwW1o6v-TFbbwZoqC6VAmGHNA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Material": "=   {{ JSON.parse($json.candidates[0].content.parts[0].text).material }}",
+            "Product Name": "= {{ JSON.parse($json.candidates[0].content.parts[0].text).product_name }}",
+            "Category": "= {{ JSON.parse($json.candidates[0].content.parts[0].text).category }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Material",
+              "displayName": "Material",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -208,
+        -912
+      ],
+      "id": "8885a4f8-275e-4fff-bd24-70950cf3d074",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "h6fiv2vRkqzsiieM",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "5f6d0f08-0073-4013-93ea-3d90b10e9d3f",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        -1120
+      ],
+      "id": "3eee279d-0538-4fcb-9e58-8f48fd6db1f3",
+      "name": "Webhook",
+      "webhookId": "5f6d0f08-0073-4013-93ea-3d90b10e9d3f"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are an AI classifier. Analyze the incoming data and return a JSON object with 'product_name', 'category', and 'material'.\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -352,
+        -912
+      ],
+      "id": "b60bcb92-31cc-430b-88c9-be735278c600",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "7Miyve0hfxprGOOx"
+  },
+  "versionId": "9b0b49cf-4981-4670-981d-54ddfe842b8c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1cf0e88f0ed392c2d9011fa696e492a84d8be38c0d39db6d06d6556b889450f4"
+  },
+  "nodeGroups": [],
+  "id": "hwCnHxHgd7kzfEr8",
+  "tags": []
+}
